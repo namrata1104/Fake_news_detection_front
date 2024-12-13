@@ -1,41 +1,33 @@
 import streamlit as st
 import requests
 
-# Streamlit app layout
-#st.title("Fake News Detection")
-#st.subheader("Input news text to check if it's fake or real")
+# Titel der App
+st.title("Fake News Detector")
 
-# Input from the user
-#user_input = st.text_area("Enter news text:")
+# Textarea für Benutzereingabe
+news_text = st.text_area("Paste your news text here:")
 
-#url = "http://localhost:8000/predict"
+if st.button("Check"):
+    if not news_text.strip():
+        st.warning("Please enter some text.")
+    else:
+        # Sende Anfrage an FastAPI-Backend
+        try:
+            response = requests.post(
+                "http://127.0.0.1:8000/predict",
+                json={"text": news_text}
+            )
+            response.raise_for_status()
+            data = response.json()
 
-# Predict button
+            # Ergebnis anzeigen
+            prediction = data.get("prediction")
+            accuracy = data.get("accuracy", 0) * 100
 
+            if prediction:
+                st.error(f"⚠️ This is likely FAKE news! (Accuracy: {accuracy:.2f}%)")
+            else:
+                st.success(f"✅ This appears to be REAL news! (Accuracy: {accuracy:.2f}%)")
 
-
-
-# App Title
-st.title("Textnachricht an Backend senden")
-
-# Eingabefeld für Textnachricht
-message = st.text_area("Gib eine Nachricht ein:")
-
-# Button, der die Nachricht an das Backend sendet
-if st.button("Predicat"):
-    # Sende die Nachricht an das Backend (URL http://0.0.0.0:8000)
-    url = "http://localhost:8000"  # Hier die URL des Backends
-    payload = {"message": message}
-
-    try:
-        # Sende POST-Anfrage an das Backend
-        response = requests.get(url)
-
-        # Überprüfe den Statuscode der Antwort
-        if response.status_code == 200:
-            st.success("Nachricht erfolgreich gesendet!")
-            st.write("Antwort vom Backend:", response.json())
-        else:
-            st.error(f"Fehler: {response.status_code} - {response.text}")
-    except requests.exceptions.RequestException as e:
-        st.error(f"Fehler bei der Anfrage: {e}")#
+        except Exception as e:
+            st.error(f"Error: {e}")
