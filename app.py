@@ -49,12 +49,12 @@ if st.button("Check"):
             prediction_data = []
             for model, result in results.items():
                 prediction = "FAKE" if result["prediction"] else "REAL"
-                accuracy = result["accuracy"] * 100
-                prediction_data.append([model.upper(), prediction, f"{accuracy:.2f}%"])
+                probability = result["probability"] * 100
+                prediction_data.append([model.upper(), prediction, f"{probability:.2f}%"])
 
             # If multiple models are selected, show the results in a table
             if len(prediction_data) > 1:
-                df = pd.DataFrame(prediction_data, columns=["Model", "Prediction", "Accuracy"])
+                df = pd.DataFrame(prediction_data, columns=["Model", "Prediction", "Probability"])
                 st.write("### Predictions Table:")
                 st.dataframe(df)  # Display the results as a table
 
@@ -62,8 +62,8 @@ if st.button("Check"):
                 # If only one model is selected, display the results as text
                 for model, result in results.items():
                     prediction = "FAKE" if result["prediction"] else "REAL"
-                    accuracy = result["accuracy"] * 100
-                    st.write(f"- **{model.upper()}**: {prediction} (Accuracy: {accuracy:.2f}%)")
+                    probability = result["probability"] * 100
+                    st.write(f"- **{model.upper()}**: {prediction} (Probability: {probability:.2f}%)")
 
         except Exception as e:
             st.error(f"Error: {e}")
