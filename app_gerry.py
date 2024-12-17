@@ -24,7 +24,7 @@ if st.button("Check"):
     elif not (baseline or rnn or lstm):
         st.warning("Please select at least one model.")
     else:
-        # Liste der ausgewählten Modelle erstellen
+        # Build the list of selected models
         selected_models = []
         if baseline:
             selected_models.append("baseline")
@@ -45,26 +45,23 @@ if st.button("Check"):
             response.raise_for_status()
             results = response.json()
 
-            # Ergebnisse für die Tabelle vorbereiten
+            # Prepare the results for the table
             prediction_data = []
             for model, result in results.items():
-                prediction = result["label"]  # "Fake News" oder "Real News" von der API
-                probability = result["probability"] * 100  # Umwandlung in Prozent
+                # Use labels for readability
+                prediction = result["label"]  # "Fake News" or "Real News" from API
+                probability = result["probability"] * 100  # Convert to percentage
                 prediction_data.append([model.upper(), prediction, f"{probability:.2f}%"])
 
-            # Wenn mehrere Modelle ausgewählt sind, Ergebnisse in einer Tabelle anzeigen
-            if len(prediction_data) > 0:
+            # If multiple models are selected, show the results in a table
+            if len(prediction_data) > 1:
                 df = pd.DataFrame(prediction_data, columns=["Model", "Prediction", "Probability"])
-
-                # Index von der DataFrame bei 1 oder 0 beginnen lassen
-                df.index = df.index + 1  # Indizes bei 1 beginnen lassen
                 st.write("### Predictions Table:")
-                st.dataframe(df)  # Zeige die Tabelle ohne leere Zeilen
-
+                st.dataframe(df)  # Display the results as a table
             else:
-                # Wenn nur ein Modell ausgewählt wurde, Ergebnisse als Text anzeigen
+                # If only one model is selected, display the results as text
                 for model, result in results.items():
-                    prediction = result["label"]  # "Fake News" oder "Real News" von der API
+                    prediction = result["label"]  # "Fake News" or "Real News" from API
                     probability = result["probability"] * 100
                     st.write(f"- **{model.upper()}**: {prediction} (Probability: {probability:.2f}%)")
 
