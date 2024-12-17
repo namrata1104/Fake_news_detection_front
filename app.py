@@ -48,8 +48,9 @@ if st.button("Check"):
             # Prepare the results for the table
             prediction_data = []
             for model, result in results.items():
-                prediction = "FAKE" if result["prediction"] else "REAL"
-                probability = result["probability"] * 100
+                # Use labels for readability
+                prediction = result["label"]  # "Fake News" or "Real News" from API
+                probability = result["probability"] * 100  # Convert to percentage
                 prediction_data.append([model.upper(), prediction, f"{probability:.2f}%"])
 
             # If multiple models are selected, show the results in a table
@@ -57,11 +58,10 @@ if st.button("Check"):
                 df = pd.DataFrame(prediction_data, columns=["Model", "Prediction", "Probability"])
                 st.write("### Predictions Table:")
                 st.dataframe(df)  # Display the results as a table
-
             else:
                 # If only one model is selected, display the results as text
                 for model, result in results.items():
-                    prediction = "FAKE" if result["prediction"] else "REAL"
+                    prediction = result["label"]  # "Fake News" or "Real News" from API
                     probability = result["probability"] * 100
                     st.write(f"- **{model.upper()}**: {prediction} (Probability: {probability:.2f}%)")
 
