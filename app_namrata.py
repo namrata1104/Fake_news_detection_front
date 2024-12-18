@@ -154,7 +154,7 @@ st.markdown("""
     <hr>
     <footer>
         <p style='text-align: center; color: grey;'>
-            Fake News Detector App &copy; 2024
+        Fake News Detector App &copy; 2024
         </p>
     </footer>
     """, unsafe_allow_html=True)
