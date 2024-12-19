@@ -69,7 +69,7 @@ st.markdown("<h1 class='title'>Fake News Detector</h1>", unsafe_allow_html=True)
 
 # Sidebar for model selection
 st.sidebar.header("Select Models to Use:")
-baseline = st.sidebar.checkbox("Baseline")
+# baseline = st.sidebar.checkbox("Baseline")
 rnn = st.sidebar.checkbox("RNN")
 lstm = st.sidebar.checkbox("LSTM")
 
@@ -80,13 +80,13 @@ news_text = st.text_area("Paste your news text here:", height=150)
 if st.button("Check"):
     if not news_text.strip():
         st.warning("Please enter some text.")
-    elif not (baseline or rnn or lstm):
+    elif not (rnn or lstm):
         st.warning("Please select at least one model.")
     else:
         # Build the list of selected models
         selected_models = []
-        if baseline:
-            selected_models.append("baseline")
+        # if baseline:
+        #     selected_models.append("baseline")
         if rnn:
             selected_models.append("rnn")
         if lstm:
@@ -95,7 +95,7 @@ if st.button("Check"):
         # Send request to FastAPI
         try:
             response = requests.post(
-                "https://fake-news-service-338536620509.europe-west1.run.app/predict",
+                "https://fake-news-service-876173016892.europe-west1.run.app/predict",
                 json={
                     "text": news_text,
                     "models": selected_models
